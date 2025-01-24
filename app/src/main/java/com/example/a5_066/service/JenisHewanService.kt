@@ -1,7 +1,9 @@
 package com.example.a5_066.service
 
 import com.example.a5_066.model.JenisHewan
+import okhttp3.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -28,4 +30,7 @@ interface JenisHewanService {
     suspend fun updateJenisHewan(
         @Query("id_jenis_hewan") id: String,@Body jenisHewan: JenisHewan
     )
+
+    @DELETE("deletejenisHewan.php/{id_jenis_hewan}")
+    suspend fun deleteJenisHewan(@Query("id_jenis_hewan")id: String):retrofit2.Response<Void>
 }
