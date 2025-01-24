@@ -5,6 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Query
 
 interface JenisHewanService {
@@ -20,6 +21,11 @@ interface JenisHewanService {
         @Query("id_jenis_hewan") id: String): JenisHewan
 
     @POST("insertjenisHewan.php")
-    suspend fun insertjenisHewan(
+    suspend fun insertJenisHewan(
         @Body jenisHewan: JenisHewan):JenisHewan
+
+    @PUT("editjenisHewan.php")
+    suspend fun updateJenisHewan(
+        @Query("id_jenis_hewan") id: String,@Body jenisHewan: JenisHewan
+    )
 }
