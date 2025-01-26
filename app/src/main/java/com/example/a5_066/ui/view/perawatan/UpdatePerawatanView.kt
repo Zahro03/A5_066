@@ -104,4 +104,15 @@ fun UpdatePerawatanView(
     Text("Tanggal Perawatan", color = Color.Black)
 
     Spacer(modifier = Modifier.height(8.dp))
+
+    // Input untuk Detail Perawatan
+    BasicTextField(
+        value = detail_perawatan.value,
+        onValueChange = { detail_perawatan.value = it },
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        textStyle = TextStyle(color = Color.Black)
+    )
+    Text("Detail Perawatan", color = Color.Black)
+
+    Spacer(modifier = Modifier.height(16.dp))
 }
