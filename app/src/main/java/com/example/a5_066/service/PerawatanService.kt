@@ -14,4 +14,8 @@ interface PerawatanService {
     // Mendapatkan riwayat perawatan berdasarkan id_hewan
     @GET("perawatan/bacaperawatan/{id_hewan}")
     suspend fun getRiwayatPerawatan(@Path("id_hewan") id_hewan: String): List<Perawatan>
+
+    // Menambahkan perawatan baru (insertperawatan)
+    @POST("perawatan/insertperawatan")
+    suspend fun insertPerawatan(@Body perawatan: Perawatan): Response<Unit>
 }
