@@ -93,4 +93,15 @@ fun UpdatePerawatanView(
     Text("ID Dokter", color = Color.Black)
 
     Spacer(modifier = Modifier.height(8.dp))
+
+    // Input untuk Tanggal Perawatan
+    BasicTextField(
+        value = tanggal_perawatan.value,
+        onValueChange = { tanggal_perawatan.value = it },
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        textStyle = TextStyle(color = Color.Black)
+    )
+    Text("Tanggal Perawatan", color = Color.Black)
+
+    Spacer(modifier = Modifier.height(8.dp))
 }
