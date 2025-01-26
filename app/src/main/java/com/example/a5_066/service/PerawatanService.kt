@@ -18,4 +18,11 @@ interface PerawatanService {
     // Menambahkan perawatan baru (insertperawatan)
     @POST("perawatan/insertperawatan")
     suspend fun insertPerawatan(@Body perawatan: Perawatan): Response<Unit>
+
+    // Mengupdate perawatan berdasarkan id_perawatan
+    @PUT("perawatan/editperawatan/{idPerawatan}")
+    suspend fun updatePerawatan(
+        @Path("idPerawatan") idPerawatan: String,
+        @Body perawatan: Perawatan
+    )
 }
