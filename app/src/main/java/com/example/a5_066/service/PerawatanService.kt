@@ -25,4 +25,8 @@ interface PerawatanService {
         @Path("idPerawatan") idPerawatan: String,
         @Body perawatan: Perawatan
     )
+
+    // Menghapus perawatan berdasarkan id_perawatan
+    @DELETE("perawatan/deleteperawatan/{idPerawatan}")
+    suspend fun deletePerawatan(@Path("idPerawatan") idPerawatan: String): Response<Unit>
 }
