@@ -18,7 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.a5_066.ui.theme.A5_066Theme
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @Composable
 fun UpdatePerawatanView(
@@ -122,3 +126,18 @@ fun UpdatePerawatanView(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun UpdatePerawatanViewPreview() {
+    A5_066Theme {
+        UpdatePerawatanView(
+            id_perawatan = "1234",
+            id_hewan = "5678",
+            id_dokter = "91011",
+            tanggal_perawatan = SimpleDateFormat("dd/MM/yyyy").format(Date()),
+            detail_perawatan = "Vaksinasi rabies",
+            onBackArrow = {},
+            onNavigate = {}
+        )
+    }
+}
