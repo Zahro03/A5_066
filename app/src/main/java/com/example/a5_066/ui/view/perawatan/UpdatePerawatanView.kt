@@ -82,4 +82,15 @@ fun UpdatePerawatanView(
     Text("ID Hewan", color = Color.Black)
 
     Spacer(modifier = Modifier.height(8.dp))
+
+    // Input untuk ID Dokter
+    BasicTextField(
+        value = id_dokter.value,
+        onValueChange = { id_dokter.value = it },
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        textStyle = TextStyle(color = Color.Black)
+    )
+    Text("ID Dokter", color = Color.Black)
+
+    Spacer(modifier = Modifier.height(8.dp))
 }
