@@ -147,4 +147,31 @@ fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+fun PerawatanLayout(
+    perawatan: List<Perawatan>,
+    modifier: Modifier = Modifier,
+    onDetailClick: (Perawatan) -> Unit,
+    onDeleteClick: (Perawatan) -> Unit = {}
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(perawatan) { perawatan ->
+            PerawatanCard(
+                perawatan = perawatan,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onDetailClick(perawatan) },
+                onDeleteClick = {
+                    onDeleteClick(perawatan)
+                }
+            )
+        }
+    }
+}
+
+
 
