@@ -173,5 +173,44 @@ fun PerawatanLayout(
     }
 }
 
+@Composable
+fun PerawatanCard(
+    perawatan: Perawatan,
+    modifier: Modifier = Modifier,
+    onDeleteClick: (Perawatan) -> Unit = {}
+) {
+    Card(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.medium,
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(Modifier.weight(1f))
+                IconButton(onClick = { onDeleteClick(perawatan) }) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete",
+                    )
+                }
+            }
+            Text(
+                text = "Tanggal: ${perawatan.tanggal_perawatan}",
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = "Deskripsi: ${perawatan.detail_perawatan}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
+}
+
 
 
