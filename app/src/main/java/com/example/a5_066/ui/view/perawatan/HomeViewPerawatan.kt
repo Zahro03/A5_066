@@ -91,4 +91,43 @@ fun PerawatanScreen(
     }
 }
 
+@Composable
+fun PerawatanStatus(
+    perawatanUiState: PerawatanUiState,
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDeleteClick: (Perawatan) -> Unit = {},
+    onDetailClick: (String) -> Unit
+) {
+    when (perawatanUiState) {
+        is PerawatanUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
+        is PerawatanUiState.Success ->
+            if (perawatanUiState.perawatan.isEmpty()) {
+                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = "Tidak ada data perawatan")
+                }
+            } else {
+                PerawatanLayout(
+                    perawatan = perawatanUiState.perawatan, modifier = modifier.fillMaxWidth(),
+                    onDetailClick = {
+                        onDetailClick(it.id_perawatan)
+                    },
+                    onDeleteClick = {
+                        onDeleteClick(it)
+                    }
+                )
+            }
+        is PerawatanUiState.Error -> OnError(retryAction, modifier = modifier.fillMaxSize())
+    }
+}
+
+@Composable
+fun OnLoading(modifier: Modifier = Modifier) {
+    Image(
+        modifier = modifier.size(200.dp),
+        painter = painterResource(R.drawable.loading),
+        contentDescription = stringResource(R.string.loading)
+    )
+}
+
 
