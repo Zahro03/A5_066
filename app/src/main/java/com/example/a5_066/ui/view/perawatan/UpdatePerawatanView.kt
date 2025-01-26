@@ -115,4 +115,10 @@ fun UpdatePerawatanView(
     Text("Detail Perawatan", color = Color.Black)
 
     Spacer(modifier = Modifier.height(16.dp))
+
+    // Tombol untuk update perawatan
+    Button(onClick = { updatePerawatan() }) {
+        Text("Update Perawatan")
+    }
 }
+
