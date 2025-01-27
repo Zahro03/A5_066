@@ -59,7 +59,7 @@ fun HeaderSection() {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(bottomEnd = 48.dp))
-            .background(color = Color(0xFFFFD1DC)) // Warna pastel pink
+            .background(color = Color(0xFFBDBDBD))
             .padding(bottom = 32.dp)
     ) {
         Row(
@@ -68,6 +68,12 @@ fun HeaderSection() {
                 .padding(start = 8.dp, top = 24.dp)
         ) {
             Column {
+                Icon(
+                    Icons.Filled.Home,
+                    contentDescription = "Home Icon",
+                    tint = Color.White,
+                    modifier = Modifier.padding(8.dp)
+                )
                 Spacer(Modifier.padding(3.dp))
                 Text(
                     text = "Welcome",
@@ -77,7 +83,7 @@ fun HeaderSection() {
                     modifier = Modifier.padding(start = 8.dp)
                 )
                 Text(
-                    text = "to Our Animal Care Center",
+                    text = "to Our Central warehouse",
                     fontSize = 22.sp,
                     color = Color.White,
                     modifier = Modifier.padding(start = 8.dp)
@@ -108,54 +114,42 @@ fun BodySection(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .padding(bottom = 100.dp), // Tambahkan padding bawah untuk menaikkan layout ke atas
-        verticalArrangement = Arrangement.Center, // Konten sejajar vertikal di tengah layar
-        horizontalAlignment = Alignment.CenterHorizontally // Konten sejajar horizontal di tengah layar
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(24.dp), // Jarak antar kartu lebih besar
-            modifier = Modifier.align(Alignment.CenterHorizontally) // Row di tengah horizontal
-        ) {
-            ManageCard(
-                title = "Pasien",
-                description = "",
-                backgroundColor = Color(0xFFF5B7B1), // Peach pastel
-                iconResource = R.drawable.pasieen,
-                onClick = { onItemClick("Pasien") }
-            )
+        ManageCard(
+            title = "Pasien",
+            description = "",
+            backgroundColor = Color(0xFFE0E0E0),
+            iconResource = R.drawable.pasieen,
+            onClick = { onItemClick("Pasien") }
+        )
 
-            ManageCard(
-                title = "Jenis Hewan",
-                description = "",
-                backgroundColor = Color(0xFFAED6F1), // Biru muda pastel
-                iconResource = R.drawable.jenis,
-                onClick = { onItemClick("Jenis Hewan") }
-            )
-        }
+        ManageCard(
+            title = "Jenis Hewan",
+            description = "",
+            backgroundColor = Color(0xFF87CEEB),
+            iconResource = R.drawable.jenis,
+            onClick = { onItemClick("Jenis Hewan") }
+        )
 
-        Spacer(modifier = Modifier.size(24.dp)) // Jarak antar baris lebih besar
+        ManageCard(
+            title = "Dokter",
+            description = "",
+            backgroundColor = Color(0xFFE0E0E0),
+            iconResource = R.drawable.dokter,
+            onClick = { onItemClick("Dokter") }
+        )
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(24.dp), // Jarak antar kartu lebih besar
-            modifier = Modifier.align(Alignment.CenterHorizontally) // Row di tengah horizontal
-        ) {
-            ManageCard(
-                title = "Dokter",
-                description = "",
-                backgroundColor = Color(0xFFD7BDE2), // Ungu pastel
-                iconResource = R.drawable.dokter,
-                onClick = { onItemClick("Dokter") }
-            )
+        ManageCard(
+            title = "Perawatan",
+            description = "",
+            backgroundColor = Color(0xFF87CEEB),
+            iconResource = R.drawable.perawatan,
+            onClick = { onItemClick("Perawatan") }
+        )
 
-            ManageCard(
-                title = "Perawatan",
-                description = "",
-                backgroundColor = Color(0xFFF9E79F), // Kuning pastel
-                iconResource = R.drawable.perawatpng,
-                onClick = { onItemClick("Perawatan") }
-            )
-        }
+        Spacer(modifier = Modifier.size(16.dp))
     }
 }
 
@@ -169,44 +163,34 @@ fun ManageCard(
 ) {
     Card(
         modifier = Modifier
-            .size(170.dp) // Ukuran kartu diperbesar menjadi 160x160 dp
-            .clickable { onClick() },
-        shape = RoundedCornerShape(16.dp), // Sudut melengkung
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(8.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
-            // Gambar icon
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
             Image(
                 painter = painterResource(id = iconResource),
                 contentDescription = "$title Icon",
                 modifier = Modifier
-                    .size(70.dp) // Ukuran ikon diperbesar menjadi 70 dp
+                    .size(40.dp)
                     .clip(CircleShape)
-            )
-
-            // Teks judul
-            Text(
-                text = title,
-                fontSize = 16.sp, // Ukuran teks diperbesar
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-
-            // Teks deskripsi
-            Text(
-                text = description,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Normal,
-                color = Color.White,
-                modifier = Modifier.padding(top = 4.dp)
             )
         }
     }
 }
-
-
