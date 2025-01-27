@@ -1,161 +1,158 @@
 package com.example.a5_066.ui.view.dokter
 
-import HalamanController
+import DestinasiNavigasi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.a5_066.R
 import com.example.a5_066.costumWidget.CostumeTopAppBar
 import com.example.a5_066.model.Dokter
-import com.example.a5_066.ui.view.pasien.ItemDetailPasien
-import com.example.a5_066.ui.viewModel.PenyediaViewModel
-import com.example.a5_066.ui.viewModel.pasien.DetailPasienUiState
-import com.example.a5_066.ui.viewModel.pasien.DetailViewModel
-import com.example.a5_066.ui.viewModel.pasien.toPasien
+import com.example.a5_066.ui.viewModel.dokter.DetailDokterUiState
+import com.example.a5_066.ui.viewModel.dokter.DetailDokterViewModel
 
-object DestinasiDetail : HalamanController {
-    override val route = "Detail"
+object DestinasiDetailDokter : DestinasiNavigasi {
+    override val route = "dokter"
+    val id_Dokter = "id_Dokter"
     override val titleRes = "Detail Dokter"
-    const val id_Dokter = "id_Dokter"
-    val routeWithArgs = "$route/{$id_Dokter}"
+    val routesWithArg = "$route/{$id_Dokter}"  // Mendefinisikan rute dengan argumen
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailView(
-    NavigateBack : () -> Unit,
-    onEditClick: () -> Unit,
+fun DetailDokterScreen(
+    navigateBack: () -> Unit,
+    onEditClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onDeleteClick: () -> Unit = { },
-    viewModel: DetailViewModel = viewModel(factory = PenyediaViewModel.Factory)
-) {
+    detailDokterViewModel: DetailDokterViewModel = viewModel(factory = PenyediaViewModel.Factory)
+){
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CostumeTopAppBar(
-                title = DestinasiDetail.titleRes,
+                title = DestinasiDetailDokter.titleRes,
                 canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
-                navigateUp = NavigateBack,
-                onBackPressed = NavigateBack
+                navigateUp = navigateBack,
+                onRefresh = {
+                    detailDokterViewModel.getDokterById()
+                }
             )
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onEditClick,
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(18.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit Mahasiswa"
-                )
-            }
-        }
-    ) { innerPadding ->
-        var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
+    )
+    { innerPadding ->
+        DetailStatus(
+            dokterUiState = detailDokterViewModel.detailDokterUiState,
+            retryAction = {detailDokterViewModel.getDokterById() },
+            modifier = Modifier.padding(innerPadding)
+                .fillMaxSize(),
+            onEditClick = onEditClick
 
-        BodyDetailDokter(
-            detailUiState = viewModel.detailPasienUiState,
-            modifier = Modifier.padding(innerPadding),
-            onDeleteClick = {
-                deleteConfirmationRequired = true
-            }
         )
-
-        if (deleteConfirmationRequired) {
-            DeleteConfirmationDialog(
-                onDeleteConfirm = {
-                    viewModel.detailPasienUiState
-                    onDeleteClick()
-                    deleteConfirmationRequired = false
-                },
-                onDeleteCancel = {
-                    deleteConfirmationRequired = false
-                },
-                modifier = Modifier.padding(8.dp)
-            )
-        }
     }
 }
 
 @Composable
-fun BodyDetailDokter(
+fun DetailStatus(
+    dokterUiState: DetailDokterUiState,
+    retryAction: () -> Unit,
     modifier: Modifier = Modifier,
-    detailUiState: DetailPasienUiState,
-    onDeleteClick: () -> Unit
+    onEditClick: (String) -> Unit = {},
+){
+    when(dokterUiState){
+        is DetailDokterUiState.Success -> {
+            DetailDokterLayout(
+                dokter = dokterUiState.dokter,
+                modifier = modifier,
+                onEditClick = {onEditClick(it)}
+            )
+        }
+        is DetailDokterUiState.Loading -> OnLoading(modifier = modifier)
+        is DetailDokterUiState.Error -> OnError(retryAction, modifier = modifier)
+    }
+}
+
+@Composable
+fun DetailDokterLayout(
+    dokter: Dokter,
+    modifier: Modifier = Modifier,
+    onEditClick: (String) -> Unit = {}
 ) {
-    when {
-        detailUiState.isLoading -> {
-            Box(
-                modifier = modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-        detailUiState.isError -> {
-            Box(
-                modifier = modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = detailUiState.errorMessage,
-                    color = Color.Red
-                )
-            }
-        }
-        detailUiState.isUiEventNotEmpty -> {
-            Column(
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        // Membungkus seluruh detail mahasiswa dengan Box
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFEEEEEE)) // Warna abu-abu terang
+                .clip(RoundedCornerShape(8.dp))
+                .padding(16.dp) // Padding di dalam Box
+        ) {
+            // Komponen Detail Mahasiswa
+            ItemDetailDokter(
+                dokter = dokter,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                ItemDetailPasien(
-                    pasien = detailUiState.detailUiEvent.toPasien(),
-                    modifier = modifier
-                )
+            )
+        }
 
-                Spacer(modifier = Modifier.padding(8.dp))
-                Button(
-                    onClick = onDeleteClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "Delete")
-                }
-            }
+        Spacer(modifier = Modifier.height(24.dp)) // Spacer setelah detail
+
+        // Tombol Edit
+        Button(
+            onClick = { onEditClick(dokter.id_Dokter) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF424242) // Warna abu-abu gelap
+            )
+        ) {
+            Text(text = "Edit", fontSize = 16.sp, color = Color.White)
         }
     }
 }
@@ -206,26 +203,4 @@ fun ComponentDetailDokter(
             color = MaterialTheme.colorScheme.onSurface
         )
     }
-}
-
-@Composable
-private fun DeleteConfirmationDialog(
-    onDeleteConfirm: () -> Unit,
-    onDeleteCancel: () -> Unit,
-    modifier: Modifier = Modifier
-){
-    AlertDialog(onDismissRequest = { /*Do nothing*/ },
-        title = { Text("Delete Data") },
-        text = { Text("Apakah anda yakin ingin menghapus data?") },
-        dismissButton = {
-            TextButton(onClick = { onDeleteCancel() }) {
-                Text(text = "Cancel")
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = { onDeleteConfirm() }) {
-                Text(text = "Yes")
-            }
-        }
-    )
 }
