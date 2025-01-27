@@ -14,11 +14,13 @@ import java.io.IOException
 
 sealed class HomeUiState {
     data class Success(val dokter: List<Dokter>) : HomeUiState()
-    object Error : HomeUiState()
+    object Error : HomeUiState()  // Memasukkan pesan error
     object Loading : HomeUiState()
 }
 
-class DokterViewModel(private val dokter : DokterRepository) : ViewModel() {
+class DokterViewModel(
+    private val dokter: DokterRepository
+) : ViewModel() {
     var dokterUiState: HomeUiState by mutableStateOf(HomeUiState.Loading)
         private set
 
@@ -29,14 +31,15 @@ class DokterViewModel(private val dokter : DokterRepository) : ViewModel() {
     fun getDokter() {
         viewModelScope.launch {
             dokterUiState = HomeUiState.Loading
-            dokterUiState = try {
-                HomeUiState.Success(dokter.getDokter())
+            dokterUiState
+            try {
+                dokterUiState = HomeUiState.Success(dokter.getDokter().data)
             } catch (e: IOException) {
-                Log.e("HomeViewModel", "Kesalahan Jaringan", e)
+                Log.e("HomeViewModel", "Kesalahan jaringan", e)
                 HomeUiState.Error
             } catch (e: HttpException) {
                 Log.e("HomeViewModel", "Kesalahan HTTP", e)
-                HomeUiState.Error
+               HomeUiState.Error
             }
         }
     }
@@ -45,13 +48,10 @@ class DokterViewModel(private val dokter : DokterRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 dokter.deleteDokter(id_Dokter)
-                getDokter()
             } catch (e: IOException) {
-                Log.e("HomeViewModel", "Terjadi kesalahan jaringan saat menghapus pasien", e)
-                dokterUiState = HomeUiState.Error
+                HomeUiState.Error
             } catch (e: HttpException) {
-                Log.e("HomeViewModel", "Terjadi kesalahan HTTP saat menghapus pasien", e)
-                dokterUiState = HomeUiState.Error
+               HomeUiState.Error
             }
         }
     }
