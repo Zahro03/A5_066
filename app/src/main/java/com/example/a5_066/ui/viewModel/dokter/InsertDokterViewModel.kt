@@ -1,27 +1,29 @@
 package com.example.a5_066.ui.viewModel.dokter
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.a5_066.model.Dokter
 import com.example.a5_066.repository.DokterRepository
 import kotlinx.coroutines.launch
 
-class InsertDokterViewModel (
-    private val dokter: DokterRepository
+class InsertDokterViewModel(
+    private val dokterRepository: DokterRepository
 ) : ViewModel() {
-    private val _uiState = mutableStateOf(InsertUiState())
-    val uiState: State<InsertUiState> = _uiState
 
-    fun updateInsertDokterState(insertUiEvent: InsertUiEvent) {
-        _uiState.value = InsertUiState(insertUiEvent = insertUiEvent)
+    var uiState by mutableStateOf(InsertDokterUiState())
+        private set
+
+    fun updateInsertDokterState(insertDokterUiEvent: InsertDokterUiEvent) {
+        uiState = InsertDokterUiState(insertDokterUiEvent = insertDokterUiEvent)
     }
 
     fun insertDokter() {
         viewModelScope.launch {
             try {
-                dokter.insertDokter(_uiState.value.insertUiEvent.toDokter())
+                dokterRepository.insertDokter(uiState.insertDokterUiEvent.toDokter())
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -29,30 +31,29 @@ class InsertDokterViewModel (
     }
 }
 
-data class InsertUiState(
-    val insertUiEvent: InsertUiEvent = InsertUiEvent(),
-    val isLoading: Boolean = false
+data class InsertDokterUiState(
+    val insertDokterUiEvent: InsertDokterUiEvent = InsertDokterUiEvent()
 )
 
-data class InsertUiEvent(
+data class InsertDokterUiEvent(
     val id_Dokter: String = "",
     val nama_dokter: String = "",
     val spesialisasi: String = "",
     val kontak: String = ""
 )
 
-fun InsertUiEvent.toDokter(): Dokter = Dokter(
+fun InsertDokterUiEvent.toDokter(): Dokter = Dokter(
     id_Dokter = id_Dokter,
     nama_dokter = nama_dokter,
     spesialisasi = spesialisasi,
     kontak = kontak
 )
 
-fun Dokter.toUiStateDokter(): InsertUiState = InsertUiState(
-    insertUiEvent = toInsertUiEvent()
+fun Dokter.toUiStateDokter(): InsertDokterUiState = InsertDokterUiState(
+    insertDokterUiEvent = toInsertDokterUiEvent()
 )
 
-fun Dokter.toInsertUiEvent(): InsertUiEvent = InsertUiEvent(
+fun Dokter.toInsertDokterUiEvent(): InsertDokterUiEvent = InsertDokterUiEvent(
     id_Dokter = id_Dokter,
     nama_dokter = nama_dokter,
     spesialisasi = spesialisasi,
