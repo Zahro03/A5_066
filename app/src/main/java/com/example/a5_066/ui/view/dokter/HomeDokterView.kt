@@ -1,6 +1,6 @@
 package com.example.a5_066.ui.view.dokter
 
-import HalamanController
+import DestinasiNavigasi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,51 +42,44 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a5_066.R
 import com.example.a5_066.costumWidget.CostumeTopAppBar
 import com.example.a5_066.model.Dokter
-import com.example.a5_066.ui.viewModel.PenyediaViewModel
 import com.example.a5_066.ui.viewModel.dokter.DokterViewModel
 import com.example.a5_066.ui.viewModel.dokter.HomeUiState
 
-object DestinasiHome : HalamanController {
-    override val route = "home"
+object DestinasiHomeDokter : DestinasiNavigasi {
+    override val route = "dokter"
     override val titleRes = "Home Dokter"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-    navigateToItemEntry: () -> Unit,
+fun HomeDokterScreen(
     modifier: Modifier = Modifier,
+    navigateToItemEntry: () -> Unit,
     onDetailClick: (String) -> Unit,  // Pastikan menerima String
-    viewModel: DokterViewModel = viewModel(factory = PenyediaViewModel.Factory),
-    navigateBack: () -> Unit
+    viewModel: DokterViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CostumeTopAppBar(
-                title = DestinasiHome.titleRes,
+                title = DestinasiHomeDokter.titleRes,
                 canNavigateBack = false,
                 scrollBehavior = scrollBehavior,
                 onRefresh = {
                     viewModel.getDokter()
-                },
-                onBackPressed = navigateBack
+                }
             )
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navigateToItemEntry() },
+                onClick = navigateToItemEntry,
                 shape = MaterialTheme.shapes.medium,
-                containerColor = MaterialTheme.colorScheme.primary
+                modifier = Modifier.padding(18.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Tambah Dokter",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Mahasiswa")
             }
-        }
+        },
     ) { innerPadding ->
         HomeStatus(
             homeUiState = viewModel.dokterUiState,
