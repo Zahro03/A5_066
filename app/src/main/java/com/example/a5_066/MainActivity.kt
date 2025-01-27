@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.a5_066.ui.theme.A5_066Theme
+import com.example.a5_066.ui.viewModel.KlinikHewanApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             A5_066Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    PengelolaHalaman(
+                    KlinikHewanApp(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
