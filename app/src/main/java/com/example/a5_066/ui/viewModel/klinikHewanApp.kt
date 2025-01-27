@@ -1,4 +1,4 @@
-package com.example.a5_066.ui.viewModel.pasien
+package com.example.a5_066.ui.viewModel
 
 import PengelolaHalaman
 import androidx.compose.foundation.layout.fillMaxSize
