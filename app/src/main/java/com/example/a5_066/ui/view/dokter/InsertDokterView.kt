@@ -1,6 +1,6 @@
 package com.example.a5_066.ui.view.dokter
 
-import HalamanController
+import DestinasiNavigasi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,14 +22,13 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a5_066.costumWidget.CostumeTopAppBar
-import com.example.a5_066.ui.viewModel.PenyediaViewModel
+import com.example.a5_066.ui.viewModel.dokter.InsertDokterUiEvent
+import com.example.a5_066.ui.viewModel.dokter.InsertDokterUiState
 import com.example.a5_066.ui.viewModel.dokter.InsertDokterViewModel
-import com.example.a5_066.ui.viewModel.dokter.InsertUiEvent
-import com.example.a5_066.ui.viewModel.dokter.InsertUiState
 import kotlinx.coroutines.launch
 
-object DestinasiEntry : HalamanController {
-    override val route = "item_entry"
+object DestinasiInsertDokter : DestinasiNavigasi {
+    override val route = "dokter_entry"
     override val titleRes = "Entry Dokter"
 }
 
@@ -38,7 +37,7 @@ object DestinasiEntry : HalamanController {
 fun EntryDokterScreen(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: InsertDokterViewModel = viewModel(factory = PenyediaViewModel.Factory)
+    viewModel: InsertDokterViewModel = viewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -47,17 +46,16 @@ fun EntryDokterScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CostumeTopAppBar(
-                title = DestinasiEntry.titleRes,
+                title = DestinasiInsertDokter.titleRes,
                 canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
-                navigateUp = navigateBack,
-                onBackPressed = navigateBack
+                navigateUp = navigateBack
             )
         }
     ) { innerPadding ->
         EntryBody(
-            insertUiState = viewModel.uiState.value,
-            onDokterValueChange = { viewModel.updateInsertDokterState(it) }, // Correct passing
+            insertUiState = viewModel.uiState,
+            onDokterValueChange = viewModel::updateInsertDokterState,
             onSaveClick = {
                 coroutineScope.launch {
                     viewModel.insertDokter()
@@ -74,8 +72,8 @@ fun EntryDokterScreen(
 
 @Composable
 fun EntryBody(
-    insertUiState: InsertUiState,
-    onDokterValueChange: (InsertUiEvent) -> Unit, // Fix type
+    insertUiState: InsertDokterUiState,
+    onDokterValueChange: (InsertDokterUiEvent) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -84,8 +82,8 @@ fun EntryBody(
         modifier = modifier.padding(12.dp)
     ) {
         FormInput(
-            insertUiEvent = insertUiState.insertUiEvent,
-            onValueChange = onDokterValueChange, // Correct passing
+            insertDokterUiEvent = insertUiState.insertDokterUiEvent,
+            onValueChange = onDokterValueChange,
             modifier = Modifier.fillMaxWidth()
         )
         Button(
@@ -98,12 +96,11 @@ fun EntryBody(
     }
 }
 
-
 @Composable
 fun FormInput(
-    insertUiEvent: InsertUiEvent,
+    insertDokterUiEvent: InsertDokterUiEvent,
     modifier: Modifier = Modifier,
-    onValueChange: (InsertUiEvent) -> Unit = {},
+    onValueChange: (InsertDokterUiEvent) -> Unit = {},
     enabled: Boolean = true
 ) {
     Column(
@@ -111,52 +108,40 @@ fun FormInput(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         OutlinedTextField(
-            value = insertUiEvent.id_Dokter,
-            onValueChange = { onValueChange(insertUiEvent.copy(id_Dokter = it)) },
+            value = insertDokterUiEvent.id_Dokter,
+            onValueChange = { onValueChange(insertDokterUiEvent.copy(id_Dokter = it)) },
             label = { Text("Id Dokter") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
-
-
         OutlinedTextField(
-            value = insertUiEvent.nama_dokter,
-            onValueChange = { onValueChange(insertUiEvent.copy(nama_dokter = it)) },
+            value = insertDokterUiEvent.nama_dokter,
+            onValueChange = { onValueChange(insertDokterUiEvent.copy(nama_dokter = it)) },
             label = { Text("Nama Dokter") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
-
         OutlinedTextField(
-            value = insertUiEvent.spesialisasi,
-            onValueChange = { onValueChange(insertUiEvent.copy(spesialisasi = it)) },
+            value = insertDokterUiEvent.spesialisasi,
+            onValueChange = { onValueChange(insertDokterUiEvent.copy(spesialisasi = it)) },
             label = { Text("Spesialisasi") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
-
         OutlinedTextField(
-            value = insertUiEvent.kontak,
-            onValueChange = { onValueChange(insertUiEvent.copy(kontak = it)) },
+            value = insertDokterUiEvent.kontak,
+            onValueChange = { onValueChange(insertDokterUiEvent.copy(kontak = it)) },
             label = { Text("Kontak") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
-
-        if (enabled) {
-            Text(
-                text = "Isi Semua Data Dokter!",
-                modifier = Modifier.padding(12.dp)
-            )
-        }
-
         Divider(
-            thickness = 8.dp,
-            modifier = Modifier.padding(12.dp)
+            thickness = 1.dp,
+            modifier = Modifier.padding(vertical = 8.dp)
         )
     }
 }
