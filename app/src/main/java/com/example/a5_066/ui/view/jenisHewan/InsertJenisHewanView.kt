@@ -1,19 +1,26 @@
 package com.example.a5_066.ui.view.jenisHewan
 
+import DestinasiInsertJh
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a5_066.costumWidget.CostumeTopAppBar
+import com.example.a5_066.ui.viewModel.jenisHewan.InsertJenisHewanViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -29,7 +36,7 @@ fun EntryJenisHewanScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CostumeTopAppBar(
-                title = DestinasiInsertjh.titleRes,
+                title = DestinasiInsertJh.titleRes,
                 canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
                 navigateUp = navigateBack
@@ -37,7 +44,7 @@ fun EntryJenisHewanScreen(
         }
     ) { innerPadding ->
         EntryBody(
-            insertUiState = viewModel.uiState,
+            insertJhUiState = viewModel.uiState,
             onJenisHewanValueChange = viewModel::updateInsertJhState,
             onSaveClick = {
                 coroutineScope.launch {
@@ -55,8 +62,8 @@ fun EntryJenisHewanScreen(
 
 @Composable
 fun EntryBody(
-    insertUiState: InsertUiState,
-    onJenisHewanValueChange: (InsertUiEvent) -> Unit,
+    insertJhUiState: InsertJhUiState,
+    onJenisHewanValueChange: (InsertJhUiEvent) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -65,7 +72,7 @@ fun EntryBody(
         modifier = modifier.padding(12.dp)
     ) {
         FormInput(
-            insertUiEvent = insertUiState.insertUiEvent,
+            insertJhUiEvent = insertJhUiState.insertUiEvent,
             onValueChange = onJenisHewanValueChange,
             modifier = Modifier.fillMaxWidth()
         )
@@ -82,7 +89,7 @@ fun EntryBody(
 @Composable
 fun FormInput(
     modifier: Modifier = Modifier,
-    insertUiEvent: InsertUiEvent ,
+    insertJhUiEvent: InsertJhUiEvent ,
     onValueChange: (InsertUiEvent) -> Unit = { },
     enabled:Boolean = true
 ) {
@@ -91,24 +98,24 @@ fun FormInput(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ){
         OutlinedTextField(
-            value = insertUiEvent.id_jenis_hewan,
-            onValueChange = { onValueChange(insertUiEvent.copy(id_jenis_hewan = it))},
+            value = insertJhUiEvent.id_jenis_hewan,
+            onValueChange = { onValueChange(insertJhUiEvent.copy(id_jenis_hewan = it))},
             label = { Text("Id Jenis Hewan") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
         OutlinedTextField(
-            value = insertUiEvent.nama_jenis_hewan,
-            onValueChange = { onValueChange(insertUiEvent.copy(nama_jenis_hewan = it)) },
+            value = insertJhUiEvent.nama_jenis_hewan,
+            onValueChange = { onValueChange(insertJhUiEvent.copy(nama_jenis_hewan = it)) },
             label = { Text("Nama Jenis Hewan") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
         OutlinedTextField(
-            value = insertUiEvent.deskripsi,
-            onValueChange = { onValueChange(insertUiEvent.copy(deskripsi = it)) },
+            value = insertJhUiEvent.deskripsi,
+            onValueChange = { onValueChange(insertJhUiEvent.copy(deskripsi = it)) },
             label = { Text("Deskripsi") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
