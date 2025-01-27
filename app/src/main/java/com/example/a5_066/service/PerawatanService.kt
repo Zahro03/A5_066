@@ -1,6 +1,8 @@
 package com.example.a5_066.service
 
 import com.example.a5_066.model.Perawatan
+import com.example.a5_066.model.PerawatanResponse
+import com.example.a5_066.model.PerawatanResponseDetail
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -12,21 +14,24 @@ import retrofit2.http.Path
 interface PerawatanService {
 
     // Mendapatkan riwayat perawatan berdasarkan id_hewan
-    @GET("perawatan/bacaperawatan/{id_hewan}")
-    suspend fun getRiwayatPerawatan(@Path("id_hewan") id_hewan: String): List<Perawatan>
+    @GET("bacaperawatan.php")
+    suspend fun getPerawatan() : PerawatanResponse
+
+    @GET("bacaperawatan1.php")
+    suspend fun getPerawatanById(@Path("id_perawatan")id_perawatan: String): PerawatanResponseDetail
 
     // Menambahkan perawatan baru (insertperawatan)
-    @POST("perawatan/insertperawatan")
-    suspend fun insertPerawatan(@Body perawatan: Perawatan): Response<Unit>
+    @POST("insertperawatan.php")
+    suspend fun insertPerawatan(@Body perawatan: Perawatan)
 
     // Mengupdate perawatan berdasarkan id_perawatan
-    @PUT("perawatan/editperawatan/{idPerawatan}")
+    @PUT("editperawatan.php")
     suspend fun updatePerawatan(
-        @Path("idPerawatan") idPerawatan: String,
+        @Path("id_perawatan") id_perawatan: String,
         @Body perawatan: Perawatan
     )
 
     // Menghapus perawatan berdasarkan id_perawatan
-    @DELETE("perawatan/deleteperawatan/{idPerawatan}")
-    suspend fun deletePerawatan(@Path("idPerawatan") idPerawatan: String): Response<Unit>
+    @DELETE("deleteperawatan.php{id_perawatan}")
+    suspend fun deletePerawatan(@Path("id_perawatan") id_perawatan: String): Response<Unit>
 }
