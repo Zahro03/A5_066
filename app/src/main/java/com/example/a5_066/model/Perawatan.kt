@@ -10,3 +10,17 @@ data class Perawatan(
     val tanggal_perawatan: String,
     val detail_perawatan: String
 )
+
+@Serializable
+data class PerawatanResponse(
+    val status : Boolean,
+    val message : String,
+    val data : List<Perawatan>
+)
+
+@Serializable
+data class PerawatanResponseDetail(
+    val status : Boolean,
+    val message : String,
+    val data : Perawatan
+)
