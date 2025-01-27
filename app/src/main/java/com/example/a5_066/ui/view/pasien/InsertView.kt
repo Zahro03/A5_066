@@ -1,21 +1,14 @@
 package com.example.a5_066.ui.view.pasien
 
-import HalamanController
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import DestinasiNavigasi
+import InsertPasienUiEvent
+import InsertPasienUiState
+import InsertViewModel
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -23,14 +16,12 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.a5_066.R
 import com.example.a5_066.costumWidget.CostumeTopAppBar
-import com.example.a5_066.ui.viewModel.PenyediaViewModel
-import com.example.a5_066.ui.viewModel.pasien.InsertUiEvent
-import com.example.a5_066.ui.viewModel.pasien.InsertUiState
-import com.example.a5_066.ui.viewModel.pasien.InsertViewModel
+import com.example.a5_066.model.JenisHewan
 import kotlinx.coroutines.launch
 
-object DestinasiEntry : HalamanController {
+object DestinasiInsertPasien : DestinasiNavigasi {
     override val route = "item_entry"
     override val titleRes = "Entry Hewan"
 }
@@ -40,25 +31,25 @@ object DestinasiEntry : HalamanController {
 fun EntryPasienScreen(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: InsertViewModel = viewModel(factory = PenyediaViewModel.Factory)// Pastikan viewModel dipanggil dengan tanda kurung untuk mendapatkan instance ViewModel
+    viewModel: InsertViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior() // Membuat header lebih dekat ke atas
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CostumeTopAppBar(
-                title = DestinasiEntry.titleRes,
+                title = DestinasiInsertPasien.titleRes,
                 canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
-                navigateUp = navigateBack,
-                onBackPressed = navigateBack
+                navigateUp = navigateBack
             )
         }
     ) { innerPadding ->
         EntryBody(
-            insertUiState = viewModel.uiState.value,  // Pastikan Anda mengakses .value untuk mendapatkan nilai dari State
+            insertPasienUiState = viewModel.uiState,
+            jenisList = viewModel.jenisList,
             onPasienValueChange = viewModel::updateInsertPasienState,
             onSaveClick = {
                 coroutineScope.launch {
@@ -68,7 +59,7 @@ fun EntryPasienScreen(
             },
             modifier = Modifier
                 .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()) // Aktifkan scrolling
                 .fillMaxWidth()
         )
     }
@@ -76,17 +67,20 @@ fun EntryPasienScreen(
 
 @Composable
 fun EntryBody(
-    insertUiState: InsertUiState,
-    onPasienValueChange: (InsertUiEvent) -> Unit,
+    insertPasienUiState: InsertPasienUiState,
+    jenisList:List<JenisHewan>,
+    onPasienValueChange: (InsertPasienUiEvent) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(18.dp),
-        modifier = modifier.padding(12.dp)
+        modifier = modifier.padding(16.dp)
     ) {
         FormInput(
-            insertUiEvent = insertUiState.insertUiEvent,
+            insertPasienUiEvent = insertPasienUiState.insertPasienUiEvent,
+            insertPasienUiState = insertPasienUiState,
+            jenisList = jenisList,
             onValueChange = onPasienValueChange,
             modifier = Modifier.fillMaxWidth()
         )
@@ -102,27 +96,39 @@ fun EntryBody(
 
 @Composable
 fun FormInput(
-    insertUiEvent: InsertUiEvent,
+    insertPasienUiState: InsertPasienUiState,
+    insertPasienUiEvent: InsertPasienUiEvent,
     modifier: Modifier = Modifier,
-    onValueChange: (InsertUiEvent) -> Unit = {},
+    jenisList: List<JenisHewan>,
+    onValueChange: (InsertPasienUiEvent) -> Unit = {},
     enabled: Boolean = true
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        // ID Hewan
         OutlinedTextField(
-            value = insertUiEvent.id_hewan,
-            onValueChange = { onValueChange(insertUiEvent.copy(id_hewan = it)) },
+            value = insertPasienUiEvent.id_hewan,
+            onValueChange = { onValueChange(insertPasienUiEvent.copy(id_hewan = it)) },
             label = { Text("Id Hewan") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
+        // Validasi untuk ID Hewan
+        if (insertPasienUiEvent.id_hewan.isEmpty()) {
+            Text(
+                text = "ID Hewan wajib diisi.",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+
         // Nama Hewan
         OutlinedTextField(
-            value = insertUiEvent.nama_hewan,
-            onValueChange = { onValueChange(insertUiEvent.copy(nama_hewan = it)) },
+            value = insertPasienUiEvent.nama_hewan,
+            onValueChange = { onValueChange(insertPasienUiEvent.copy(nama_hewan = it)) },
             label = { Text("Nama Hewan") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
@@ -131,8 +137,8 @@ fun FormInput(
 
         // Jenis Hewan ID
         OutlinedTextField(
-            value = insertUiEvent.jenis_hewan_id,
-            onValueChange = { onValueChange(insertUiEvent.copy(jenis_hewan_id = it)) },
+            value = insertPasienUiEvent.jenis_hewan_id,
+            onValueChange = { onValueChange(insertPasienUiEvent.copy(jenis_hewan_id = it)) },
             label = { Text("Jenis Hewan") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
@@ -141,8 +147,8 @@ fun FormInput(
 
         // Pemilik Hewan
         OutlinedTextField(
-            value = insertUiEvent.pemilik,
-            onValueChange = { onValueChange(insertUiEvent.copy(pemilik = it)) },
+            value = insertPasienUiEvent.pemilik,
+            onValueChange = { onValueChange(insertPasienUiEvent.copy(pemilik = it)) },
             label = { Text("Pemilik Hewan") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
@@ -151,8 +157,8 @@ fun FormInput(
 
         // Kontak Pemilik Hewan
         OutlinedTextField(
-            value = insertUiEvent.kontak_pemilik,
-            onValueChange = { onValueChange(insertUiEvent.copy(kontak_pemilik = it)) },
+            value = insertPasienUiEvent.kontak_pemilik,
+            onValueChange = { onValueChange(insertPasienUiEvent.copy(kontak_pemilik = it)) },
             label = { Text("Kontak Pemilik") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             modifier = Modifier.fillMaxWidth(),
@@ -162,8 +168,8 @@ fun FormInput(
 
         // Tanggal Lahir Hewan
         OutlinedTextField(
-            value = insertUiEvent.tanggal_lahir,
-            onValueChange = { onValueChange(insertUiEvent.copy(tanggal_lahir = it)) },
+            value = insertPasienUiEvent.tanggal_lahir,
+            onValueChange = { onValueChange(insertPasienUiEvent.copy(tanggal_lahir = it)) },
             label = { Text("Tanggal Lahir Hewan") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth(),
@@ -171,26 +177,20 @@ fun FormInput(
             singleLine = true
         )
 
+        // Catatan Kesehatan
         OutlinedTextField(
-            value = insertUiEvent.catatan_kesehatan,
-            onValueChange = { onValueChange(insertUiEvent.copy(catatan_kesehatan = it)) },
+            value = insertPasienUiEvent.catatan_kesehatan,
+            onValueChange = { onValueChange(insertPasienUiEvent.copy(catatan_kesehatan = it)) },
             label = { Text("Catatan Kesehatan") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
 
-        if (enabled) {
-            Text(
-                text = "Isi Semua Data Hewan!",
-                modifier = Modifier.padding(12.dp)
-            )
-        }
-
         Divider(
-            thickness = 8.dp,
-            modifier = Modifier.padding(12.dp)
+            thickness = 1.dp,
+            modifier = Modifier.padding(vertical = 12.dp)
         )
     }
 }
