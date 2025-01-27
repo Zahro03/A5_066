@@ -1,16 +1,18 @@
 package com.example.a5_066.repository
 
 import com.example.a5_066.model.Dokter
+import com.example.a5_066.model.DokterResponse
+import com.example.a5_066.model.DokterResponseDetail
 import com.example.a5_066.service.DokterService
-import com.example.a5_066.service.PasienService
+import com.example.a5_066.ui.view.dokter.DestinasiUpdateDokter.id_Dokter
 import java.io.IOException
 
 interface DokterRepository {
-    suspend fun getDokter(): List<Dokter>
-    suspend fun getDokterById(id: String): Dokter
+    suspend fun getDokter(): DokterResponse
+    suspend fun getDokterById(id_Dokter: String): DokterResponseDetail
     suspend fun insertDokter(dokter: Dokter)
-    suspend fun updateDokter(id: String, dokter: Dokter)
-    suspend fun deleteDokter(id: String)
+    suspend fun updateDokter(id_Dokter: String, dokter: Dokter)
+    suspend fun deleteDokter(id_Dokter: String)
 }
 
 class NetworkDokterRepository(
@@ -22,27 +24,24 @@ class NetworkDokterRepository(
     }
 
     override suspend fun updateDokter(id: String, dokter: Dokter) {
-        dokterApiService.updateDokter(id,dokter)
+        dokterApiService.updateDokter(id_Dokter,dokter)
     }
 
-    override suspend fun deleteDokter(id: String) {
-        try {
-            val response = dokterApiService.deleteDokter(id)
+    override suspend fun deleteDokter(id_Dokter: String) {
+            val response = dokterApiService.deleteDokter(id_Dokter)
             if (!response.isSuccessful) {
                 throw IOException(
                     "Failed to delete dokter. HTTP Status Code: " +
                             "${response.code()}"
                 )
             } else {
-                response.message()
                 println(response.message())
             }
-        } catch (e: Exception) {
-            throw e
         }
+    override suspend fun getDokter(): DokterResponse{
+        return dokterApiService.getDokter()
     }
-    override suspend fun getDokter(): List<Dokter> = dokterApiService.getDokter()
-    override suspend fun getDokterById(id: String): Dokter {
-        return dokterApiService.getDokterById(id)
+    override suspend fun getDokterById(id_Dokter: String): DokterResponseDetail {
+        return dokterApiService.getDokterById(id_Dokter)
     }
 }
