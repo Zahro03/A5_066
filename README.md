@@ -1,4 +1,5 @@
 MANAJEMEN PASIEN 
+
 ![Screenshot 2025-01-28 210423](https://github.com/user-attachments/assets/30de1517-0e80-4a2e-90e3-91bd08ee99df)
 ![Screenshot 2025-01-28 210638](https://github.com/user-attachments/assets/3c13cbfd-0d35-4fd5-b8e3-a331c672437d)
 ![Screenshot 2025-01-28 210821](https://github.com/user-attachments/assets/9601489f-0d92-4634-8c43-869d695ff10f)
@@ -9,6 +10,7 @@ MANAJEMEN PASIEN
 ![Screenshot 2025-01-28 211138](https://github.com/user-attachments/assets/c5898471-b0e0-482d-8a56-278110d02eaf)
 
 MANAJEMEN JENIS HEWAN
+
 ![Screenshot 2025-01-28 211509](https://github.com/user-attachments/assets/a1b5b3e2-9872-4cec-aaec-c971f10a6e09)
 ![Screenshot 2025-01-28 211457](https://github.com/user-attachments/assets/c2d035c0-523e-4e6b-b4d9-6af4e10da46b)
 ![Screenshot 2025-01-28 211434](https://github.com/user-attachments/assets/004135c8-0a64-4930-a561-2b5b27cd4e7b)
@@ -17,6 +19,7 @@ MANAJEMEN JENIS HEWAN
 ![Screenshot 2025-01-28 212112](https://github.com/user-attachments/assets/66e5b4be-c7ba-4924-aa72-5be1d86719f3)
 
 MANAJEMEN DOKTER
+
 ![image](https://github.com/user-attachments/assets/52bd3dc3-3e37-4579-b6cc-336c72356995)
 ![image](https://github.com/user-attachments/assets/97b1ec78-bc85-41e8-97d5-fcb97497b972)
 ![image](https://github.com/user-attachments/assets/cc572b71-547b-4c95-be4e-c288a3bfaac5)
@@ -25,6 +28,7 @@ MANAJEMEN DOKTER
 ![Screenshot 2025-01-28 215053](https://github.com/user-attachments/assets/877e6cfb-1106-4c6b-82b8-0df173a3d595)
 
 MANAJEMEN PERAWATAN
+
 ![Screenshot 2025-01-28 215845](https://github.com/user-attachments/assets/0a84b050-e065-4dc2-bcca-f4985742b7c3)
 ![Screenshot 2025-01-28 215916](https://github.com/user-attachments/assets/c98a5333-c9e5-4094-97cc-d2547e93fbd4)
 ![Screenshot 2025-01-28 220028](https://github.com/user-attachments/assets/1f177d04-b669-408c-bb48-232cb5fa9d5e)
